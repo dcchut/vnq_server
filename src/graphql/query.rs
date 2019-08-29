@@ -1,7 +1,9 @@
-use crate::graphql::Context;
-use crate::visible_quotes;
-use diesel::prelude::*;
 use std::convert::TryFrom;
+
+use diesel::prelude::*;
+
+use crate::db::visible_quotes;
+use crate::graphql::Context;
 
 pub struct Query;
 

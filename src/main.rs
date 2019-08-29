@@ -5,14 +5,14 @@ use actix_cors::Cors;
 use actix_web::http::header;
 use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use actix_web_httpauth::extractors::bearer::BearerAuth;
-use dotenv::dotenv;
 use futures::future::Future;
 use jsonwebtoken::{decode, Algorithm, Validation};
 use juniper::http::GraphQLRequest;
 
-use server2::establish_connection;
-use server2::graphql::Claims;
-use server2::graphql::{create_schema, Context, Schema};
+use dotenv::dotenv;
+use vnq_server::establish_connection;
+use vnq_server::graphql::Claims;
+use vnq_server::graphql::{create_schema, Context, Schema};
 
 fn graphql(
     st: web::Data<Arc<Schema>>,

@@ -1,8 +1,10 @@
-use crate::get_user;
+use std::convert::TryFrom;
+
 use diesel::prelude::*;
 use diesel::SqliteConnection;
 use juniper::{GraphQLInputObject, GraphQLObject};
-use std::convert::TryFrom;
+
+use crate::db::get_user;
 
 // TODO: perhaps define a proc-macro to generate the From<> implementations below
 

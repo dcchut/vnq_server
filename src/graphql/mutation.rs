@@ -1,11 +1,12 @@
-use crate::graphql::{Claims, Context};
-use crate::{create_quote, create_user, login};
-use diesel::prelude::*;
-use jsonwebtoken::{encode, Algorithm, Header};
-use juniper::graphql_value;
-use juniper::{FieldError, FieldResult};
 use std::convert::TryFrom;
 use std::env;
+
+use diesel::prelude::*;
+use jsonwebtoken::{encode, Algorithm, Header};
+use juniper::{graphql_value, FieldError, FieldResult};
+
+use crate::db::{create_quote, create_user, login};
+use crate::graphql::{Claims, Context};
 
 pub struct Mutation;
 

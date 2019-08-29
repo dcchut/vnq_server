@@ -1,13 +1,13 @@
 use diesel::SqliteConnection;
 use serde::{Deserialize, Serialize};
 
-pub mod models;
-pub mod mutation;
-pub mod query;
-
 pub use self::models::*;
 pub use self::mutation::Mutation;
 pub use self::query::Query;
+
+pub mod models;
+pub mod mutation;
+pub mod query;
 
 pub struct Context {
     conn: SqliteConnection,

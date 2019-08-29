@@ -1,6 +1,6 @@
-use crate::schema::quotes;
-use crate::schema::users;
 use chrono::NaiveDateTime;
+
+use crate::schema::{quotes, users};
 
 #[derive(Identifiable, Queryable, Debug)]
 pub struct User {
