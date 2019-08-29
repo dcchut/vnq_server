@@ -3,7 +3,7 @@ use std::{env, io};
 
 use actix_cors::Cors;
 use actix_web::http::header;
-use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
+use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use actix_web_httpauth::extractors::bearer::BearerAuth;
 use futures::future::Future;
 use jsonwebtoken::{decode, Algorithm, Validation};
@@ -18,6 +18,7 @@ fn graphql(
     st: web::Data<Arc<Schema>>,
     credentials: Option<BearerAuth>,
     data: web::Json<GraphQLRequest>,
+    req: HttpRequest,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
     // It seems there are two ways we could get a connection here
     // (1) Establish a new connection on each request, or
@@ -25,6 +26,11 @@ fn graphql(
     // For the moment we're using (1), though the performance implications of this
     // choice should be investigated.
     let mut ctx = Context::new(establish_connection());
+
+    // Set context IP address to request IP address
+    if let Some(ip) = req.connection_info().remote() {
+        ctx.ip(ip);
+    }
 
     // Update the claims in our context
     if let Some(credentials) = credentials {

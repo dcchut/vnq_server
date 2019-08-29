@@ -2,7 +2,7 @@ use std::convert::TryFrom;
 
 use diesel::prelude::*;
 use diesel::SqliteConnection;
-use juniper::{GraphQLInputObject, GraphQLObject};
+use juniper::{GraphQLInputObject, GraphQLObject, ID};
 
 use crate::db::get_user;
 
@@ -40,20 +40,11 @@ impl From<crate::db::models::User> for User {
 #[derive(GraphQLObject)]
 #[graphql(description = "A user submitted quote")]
 pub struct Quote {
-    pub id: i32,
+    pub id: ID,
     pub content: String,
     pub votes: i32,
     pub visible: bool,
     pub user: Option<crate::graphql::models::User>,
-    //pub user_id: Option<i32>,
-}
-
-/// The information required from the client to submit a new quote
-/// TODO: getters/setters instead of public fields
-#[derive(GraphQLInputObject)]
-#[graphql(description = "A user submitted quote")]
-pub struct NewQuote {
-    pub content: String,
 }
 
 impl TryFrom<(crate::db::models::Quote, &SqliteConnection)> for Quote {
@@ -63,7 +54,7 @@ impl TryFrom<(crate::db::models::Quote, &SqliteConnection)> for Quote {
         let (_quote, conn) = v;
 
         let mut quote = Quote {
-            id: _quote.id,
+            id: ID::new(_quote.id.to_string()),
             content: _quote.content,
             votes: _quote.votes,
             visible: _quote.visible,
@@ -80,14 +71,4 @@ impl TryFrom<(crate::db::models::Quote, &SqliteConnection)> for Quote {
 
         Ok(quote)
     }
-
-    /*fn from(quote: crate::db::models::Quote) -> Self {
-        Self {
-            id: quote.id,
-            content: quote.content,
-            votes: quote.votes,
-            visible: quote.visible,
-            user: None,
-        }
-    }*/
 }

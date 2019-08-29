@@ -12,6 +12,7 @@ pub mod query;
 pub struct Context {
     conn: SqliteConnection,
     claims: Claims,
+    ip: Option<String>,
 }
 
 impl std::fmt::Debug for Context {
@@ -28,6 +29,9 @@ pub struct Claims {
 
     // If this user is logged in, what is their user id
     user_id: Option<i32>,
+
+    // The user's name
+    username: Option<String>,
 }
 
 impl Default for Claims {
@@ -35,13 +39,18 @@ impl Default for Claims {
         Self {
             is_admin: false,
             user_id: None,
+            username: None,
         }
     }
 }
 
 impl Claims {
-    pub fn new(is_admin: bool, user_id: Option<i32>) -> Self {
-        Self { is_admin, user_id }
+    pub fn new(is_admin: bool, user_id: Option<i32>, username: Option<String>) -> Self {
+        Self {
+            is_admin,
+            user_id,
+            username,
+        }
     }
 }
 
@@ -50,11 +59,16 @@ impl Context {
         Self {
             conn,
             claims: Claims::default(),
+            ip: None,
         }
     }
 
     pub fn with(&mut self, claims: Claims) {
         self.claims = claims;
+    }
+
+    pub fn ip(&mut self, ip: &str) {
+        self.ip = Some(String::from(ip));
     }
 }
 

@@ -3,6 +3,9 @@ name = "vnq_server"
 version = "0.2.1"
 authors = ["Robert Usher <266585+dcchut@users.noreply.github.com>"]
 edition = "2018"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/dcchut/vnq_server"
+description = "Backend GraphQL server for VNQ"
 
 [dependencies]
 diesel = { version = "1.4.2", features = ["sqlite", "chrono"] }

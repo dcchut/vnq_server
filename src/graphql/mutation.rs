@@ -11,10 +11,8 @@ use crate::graphql::{Claims, Context};
 pub struct Mutation;
 
 fn generate_token(user: crate::db::models::User) -> FieldResult<String> {
-    dbg!(&user);
-
     // Construct the user's claim
-    let claim = Claims::new(user.is_admin, Some(user.id));
+    let claim = Claims::new(user.is_admin, Some(user.id), Some(user.username));
     let secret_key = env::var("JWT_SECRET_KEY").expect("JWT_SECRET_KEY must be set");
     Ok(encode(
         &Header::new(Algorithm::HS256),
@@ -25,14 +23,17 @@ fn generate_token(user: crate::db::models::User) -> FieldResult<String> {
 
 #[juniper::object(context = Context)]
 impl Mutation {
-    fn new_quote(
-        ctx: &Context,
-        quote: crate::graphql::models::NewQuote,
-    ) -> FieldResult<crate::graphql::models::Quote> {
-        let quote = create_quote(&ctx.conn, &quote.content, "127.0.0.1", ctx.claims.user_id)
-            .map_err(|e| {
-                FieldError::new(e, graphql_value!({ "internal_error": "Database error" }))
-            })?;
+    fn new_quote(ctx: &Context, quote: String) -> FieldResult<crate::graphql::models::Quote> {
+        let quote = create_quote(
+            &ctx.conn,
+            &quote,
+            match &ctx.ip {
+                Some(ip) => ip.as_ref(),
+                None => "",
+            },
+            ctx.claims.user_id,
+        )
+        .map_err(|e| FieldError::new(e, graphql_value!({ "internal_error": "Database error" })))?;
 
         // Attempt to convert our database quote object into a graphql quote object
         crate::graphql::models::Quote::try_from((quote, &ctx.conn))
