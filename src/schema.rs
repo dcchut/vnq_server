@@ -16,6 +16,7 @@ table! {
     users (id) {
         id -> Integer,
         username -> Text,
+        salt -> Text,
         password -> Text,
         is_admin -> Bool,
         created_at -> Timestamp,

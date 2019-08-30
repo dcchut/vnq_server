@@ -1,11 +1,9 @@
-use std::convert::TryFrom;
 use std::env;
 
-use diesel::prelude::*;
-use jsonwebtoken::{encode, Algorithm, Header};
-use juniper::{graphql_value, FieldError, FieldResult};
+use jsonwebtoken::{Algorithm, encode, Header};
+use juniper::{FieldError, FieldResult, graphql_value};
 
-use crate::db::{create_quote, create_user, login};
+use crate::db::{create_quote, create_user, verify_login};
 use crate::graphql::{Claims, Context};
 
 pub struct Mutation;
@@ -24,7 +22,7 @@ fn generate_token(user: crate::db::models::User) -> FieldResult<String> {
 #[juniper::object(context = Context)]
 impl Mutation {
     fn new_quote(ctx: &Context, quote: String) -> FieldResult<crate::graphql::models::Quote> {
-        let quote = create_quote(
+        let (quote, user) = create_quote(
             &ctx.conn,
             &quote,
             match &ctx.ip {
@@ -35,28 +33,21 @@ impl Mutation {
         )
         .map_err(|e| FieldError::new(e, graphql_value!({ "internal_error": "Database error" })))?;
 
-        // Attempt to convert our database quote object into a graphql quote object
-        crate::graphql::models::Quote::try_from((quote, &ctx.conn))
-            .map_err(|e| FieldError::new(e, graphql_value!({ "internal_error": "Database error" })))
+        Ok((quote, user).into())
     }
 
     fn login(ctx: &Context, username: String, password: String) -> FieldResult<String> {
-        let user = login(&username, &password)
-            .get_result::<crate::db::models::User>(&ctx.conn)
-            .map_err(|e| {
-                FieldError::new(
-                    "Invalid username/password combination",
-                    graphql_value!({"user_error": "Invalid authentication" }),
-                )
-            })?;
+        let user = verify_login(&ctx.conn, &username, &password).map_err(|e| {
+            FieldError::new(
+                "Invalid username/password combination",
+                graphql_value!({"user_error": "Invalid authentication" }),
+            )
+        })?;
 
         generate_token(user)
     }
 
     fn signup(ctx: &Context, username: String, password: String) -> FieldResult<String> {
-        // DO SOME PROCESSING TO THE PASSWORD HERE!
-        // TODO
-
         let user = create_user(&ctx.conn, &username, &password).map_err(|e| {
             FieldError::new(
                 "Invalid username",

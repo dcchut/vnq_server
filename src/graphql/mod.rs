@@ -21,7 +21,6 @@ impl std::fmt::Debug for Context {
     }
 }
 
-// TODO: move this somewhere more appropriate
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
     // If this user is logged in, are they an admin?

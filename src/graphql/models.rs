@@ -1,15 +1,8 @@
-use std::convert::TryFrom;
-
-use diesel::prelude::*;
-use diesel::SqliteConnection;
 use juniper::{GraphQLInputObject, GraphQLObject, ID};
 
-use crate::db::get_user;
-
-// TODO: perhaps define a proc-macro to generate the From<> implementations below
+use crate::db::models as dbm;
 
 /// This struct represents the publicly available information about a user
-/// TODO: getters/setters instead of public fields
 #[derive(GraphQLObject)]
 #[graphql(description = "A user of our website")]
 pub struct User {
@@ -18,7 +11,6 @@ pub struct User {
 }
 
 /// The information required by the client to create a new user
-/// TODO: getters/setters instead of public fields
 #[derive(GraphQLInputObject)]
 #[graphql(description = "A user of our website")]
 pub struct NewUser {
@@ -26,8 +18,8 @@ pub struct NewUser {
     pub password: String,
 }
 
-impl From<crate::db::models::User> for User {
-    fn from(user: crate::db::models::User) -> Self {
+impl From<dbm::User> for User {
+    fn from(user: dbm::User) -> Self {
         Self {
             username: user.username,
             is_admin: user.is_admin,
@@ -36,7 +28,6 @@ impl From<crate::db::models::User> for User {
 }
 
 /// Represents a user submitted quote
-/// TODO: getters/setters instead of public fields
 #[derive(GraphQLObject)]
 #[graphql(description = "A user submitted quote")]
 pub struct Quote {
@@ -47,28 +38,14 @@ pub struct Quote {
     pub user: Option<crate::graphql::models::User>,
 }
 
-impl TryFrom<(crate::db::models::Quote, &SqliteConnection)> for Quote {
-    type Error = diesel::result::Error;
-
-    fn try_from(v: (crate::db::models::Quote, &SqliteConnection)) -> Result<Self, Self::Error> {
-        let (_quote, conn) = v;
-
-        let mut quote = Quote {
-            id: ID::new(_quote.id.to_string()),
+impl From<(dbm::Quote, Option<dbm::User>)> for Quote {
+    fn from((_quote, _user): (dbm::Quote, Option<dbm::User>)) -> Self {
+        Self {
+            id: ID::from(_quote.id.to_string()),
             content: _quote.content,
             votes: _quote.votes,
             visible: _quote.visible,
-            user: None,
-        };
-
-        // get the user associated with this quote
-        // TODO: investigate whether diesel has a way to access the parent from a child
-        if let Some(user_id) = _quote.user_id {
-            let user = get_user(user_id).get_result::<crate::db::models::User>(conn)?;
-
-            quote.user = Some(crate::graphql::User::from(user));
+            user: _user.map(dbm::User::into),
         }
-
-        Ok(quote)
     }
 }

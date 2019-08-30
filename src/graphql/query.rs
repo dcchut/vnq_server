@@ -1,47 +1,27 @@
-use std::convert::TryFrom;
+use juniper::{FieldError, FieldResult, graphql_value};
 
-use diesel::prelude::*;
-
-use crate::db::visible_quotes;
-use crate::graphql::Context;
+use crate::db::{models as dbm, recent_quotes, top_quotes};
+use crate::graphql::{Context, Quote};
 
 pub struct Query;
 
+/// Transforms a vector of (db::Quote,Option<db::User>) to a vector of Quote's
+/// (i.e. db -> graphql)
+fn transform_quotes(v: Vec<(dbm::Quote, Option<dbm::User>)>) -> Vec<Quote> {
+    v.into_iter().map(|x| x.into()).collect()
+}
+
 #[juniper::object(context = Context)]
 impl Query {
-    fn top_quotes(ctx: &Context) -> Vec<crate::graphql::models::Quote> {
-        use crate::schema::quotes::dsl::*;
-
-        // TODO factor this query out to top_quotes() or something like that
-        if let Ok(_quotes) = visible_quotes()
-            .order((votes.desc(), id.asc()))
-            .limit(30)
-            .load::<crate::db::models::Quote>(&ctx.conn)
-        {
-            _quotes
-                .into_iter()
-                .map(|q| crate::graphql::models::Quote::try_from((q, &ctx.conn)))
-                .collect::<Result<Vec<crate::graphql::models::Quote>, diesel::result::Error>>()
-                .unwrap_or_default()
-        } else {
-            Vec::new()
-        }
+    fn top_quotes(ctx: &Context) -> FieldResult<Vec<Quote>> {
+        top_quotes(&ctx.conn)
+            .map(transform_quotes)
+            .map_err(|e| FieldError::new(e, graphql_value!({ "internal_error": "Database error" })))
     }
 
-    fn quotes(ctx: &Context) -> Vec<crate::graphql::models::Quote> {
-        use crate::schema::quotes::dsl::*;
-
-        if let Ok(_quotes) = visible_quotes()
-            .order(id.desc())
-            .load::<crate::db::models::Quote>(&ctx.conn)
-        {
-            _quotes
-                .into_iter()
-                .map(|q| crate::graphql::models::Quote::try_from((q, &ctx.conn)))
-                .collect::<Result<Vec<crate::graphql::models::Quote>, diesel::result::Error>>()
-                .unwrap_or_default()
-        } else {
-            Vec::new()
-        }
+    fn recent_quotes(ctx: &Context) -> FieldResult<Vec<Quote>> {
+        recent_quotes(&ctx.conn)
+            .map(transform_quotes)
+            .map_err(|e| FieldError::new(e, graphql_value!({ "internal_error": "Database error" })))
     }
 }

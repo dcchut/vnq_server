@@ -6,6 +6,7 @@ use crate::schema::{quotes, users};
 pub struct User {
     pub id: i32,
     pub username: String,
+    pub salt: String,
     pub password: String,
     pub is_admin: bool,
     pub created_at: NaiveDateTime,
@@ -16,6 +17,7 @@ pub struct User {
 #[table_name = "users"]
 pub struct NewUser<'a> {
     pub username: &'a str,
+    pub salt: &'a str,
     pub password: &'a str,
     pub is_admin: bool,
     pub created_at: &'a NaiveDateTime,
