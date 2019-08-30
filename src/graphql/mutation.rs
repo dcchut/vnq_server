@@ -1,7 +1,7 @@
 use std::env;
 
-use jsonwebtoken::{Algorithm, encode, Header};
-use juniper::{FieldError, FieldResult, graphql_value};
+use jsonwebtoken::{encode, Algorithm, Header};
+use juniper::{graphql_value, FieldError, FieldResult};
 
 use crate::db::{create_quote, create_user, verify_login};
 use crate::graphql::{Claims, Context};

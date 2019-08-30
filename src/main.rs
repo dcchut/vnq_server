@@ -1,18 +1,18 @@
-use std::{env, io};
 use std::sync::Arc;
+use std::{env, io};
 
 use actix_cors::Cors;
-use actix_web::{App, Error, HttpRequest, HttpResponse, HttpServer, middleware, web};
 use actix_web::http::header;
+use actix_web::{middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use actix_web_httpauth::extractors::bearer::BearerAuth;
 use futures::future::Future;
-use jsonwebtoken::{Algorithm, decode, Validation};
+use jsonwebtoken::{decode, Algorithm, Validation};
 use juniper::http::GraphQLRequest;
 
 use dotenv::dotenv;
 use vnq_server::establish_connection;
-use vnq_server::graphql::{Context, create_schema, Schema};
 use vnq_server::graphql::Claims;
+use vnq_server::graphql::{create_schema, Context, Schema};
 
 fn graphql(
     st: web::Data<Arc<Schema>>,

@@ -1,4 +1,4 @@
-use juniper::{FieldError, FieldResult, graphql_value};
+use juniper::{graphql_value, FieldError, FieldResult};
 
 use crate::db::{models as dbm, recent_quotes, top_quotes};
 use crate::graphql::{Context, Quote};
