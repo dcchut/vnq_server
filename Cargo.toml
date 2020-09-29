@@ -10,7 +10,7 @@ description = "Backend GraphQL server for VNQ"
 [dependencies]
 diesel = { version = "1.4.5", features = ["sqlite", "chrono"] }
 dotenv = "0.15.0"
-chrono = "0.4.15"
+chrono = "0.4.18"
 juniper = "0.14.2"
 futures = "0.3"
 actix-web = "3.0.2"
