@@ -49,7 +49,7 @@ dependencies = [
 
 [[package]]
 name = "actix-cors"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "actix-service 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1724,7 +1724,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "vnq_server"
 version = "0.2.1"
 dependencies = [
- "actix-cors 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "actix-cors 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "actix-web 3.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "actix-web-httpauth 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "chrono 0.4.19 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1857,7 +1857,7 @@ dependencies = [
 "checksum actix-codec 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "09e55f0a5c2ca15795035d90c46bd0e73a5123b72f68f12596d6ba5282051380"
 "checksum actix-codec 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "78d1833b3838dbe990df0f1f87baf640cf6146e898166afe401839d1b001e570"
 "checksum actix-connect 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "177837a10863f15ba8d3ae3ec12fac1099099529ed20083a27fdfe247381d0dc"
-"checksum actix-cors 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "d88ea83af46935098feec2e19a28c919b54eb3cbf0e239b330298e2e69d4b76b"
+"checksum actix-cors 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)" = "f3e5c769e4d332bfad27f11b8139b5818c4bbddb02c385b8f16344d93ff1a8eb"
 "checksum actix-http 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "05dd80ba8f27c4a34357c07e338c8f5c38f8520e6d626ca1727d8fecc41b0cab"
 "checksum actix-macros 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "21705adc76bbe4bc98434890e73a89cd00c6015e5704a60bb6eea6c3b72316b6"
 "checksum actix-router 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)" = "9d7a10ca4d94e8c8e7a87c5173aba1b97ba9a6563ca02b0e1cd23531093d3ec8"
