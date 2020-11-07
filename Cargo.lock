@@ -52,9 +52,9 @@ dependencies = [
 
 [[package]]
 name = "actix-cors"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aaf0c4345c9663a2822d42602391418fd5766f269109ec6bf1784b056a9356a7"
+checksum = "778c96f5953144b8986fafee72b3809642c1b5050a2552a97dc02247f00b4155"
 dependencies = [
  "actix-web",
  "derive_more",
