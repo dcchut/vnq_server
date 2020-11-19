@@ -52,9 +52,9 @@ dependencies = [
 
 [[package]]
 name = "actix-cors"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e5d7e35c80bb6472cddc7d26e9f61a28758a823ac526eb6188f738d172387bcf"
+checksum = "3f3a3d5493dbc9b8769fe88c030d057ef8d2edc5728e5e26267780e8fc5db0be"
 dependencies = [
  "actix-web",
  "derive_more",
@@ -589,9 +589,9 @@ checksum = "993a608597367c6377b258c25d7120740f00ed23a2252b729b1932dd7866f908"
 
 [[package]]
 name = "derive_more"
-version = "0.99.2"
+version = "0.99.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2159be042979966de68315bce7034bb000c775f22e3e834e1c52ff78f041cae8"
+checksum = "41cb0e6161ad61ed084a36ba71fbba9e3ac5aee3606fb607fe08da6acbcf3d8c"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.2",
