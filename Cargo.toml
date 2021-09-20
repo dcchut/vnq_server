@@ -8,7 +8,7 @@ repository = "https://github.com/dcchut/vnq_server"
 description = "Backend GraphQL server for VNQ"
 
 [dependencies]
-diesel = { version = "1.4.7", features = ["sqlite", "chrono"] }
+diesel = { version = "1.4.8", features = ["sqlite", "chrono"] }
 dotenv = "0.15.0"
 chrono = "0.4.19"
 juniper = "0.14.2"
